@@ -12,5 +12,6 @@ public class User {
     @NonNull
     private Integer id;
     private String username;
+    private Integer age;
     private String address;
 }
