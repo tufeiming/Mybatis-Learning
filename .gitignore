@@ -8,4 +8,4 @@ out
 gen
 target
 
-/src/main/resources/mybatis-config.xml
+/src/main/resources/jdbc.properties

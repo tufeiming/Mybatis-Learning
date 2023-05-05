@@ -15,11 +15,16 @@ public interface UserDao {
 
     User findByMap(Map<String, Object> map);
 
-    User findByCondition(@Param("id") Integer id, @Param("username") String username);
+    List<User> findByCondition(@Param("id") Integer id, @Param("username") String username);
+
+    List<User> findByIds(@Param("ids") Integer[] ids);
+
+    List<User> selectChoose(User user);
 
     void insertUser(User user);
 
     void deleteUser(Integer id);
 
     void updateUser(User user);
+
 }
