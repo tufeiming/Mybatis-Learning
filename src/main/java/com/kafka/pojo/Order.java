@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Order {
     private Integer id;
-    private String username;
-    private Integer age;
-    private String address;
-    private List<Role> roles;
+    private Date createTime;
+    private Integer price;
+    private String remark;
+    private Integer userId;
+    private User user;
 }

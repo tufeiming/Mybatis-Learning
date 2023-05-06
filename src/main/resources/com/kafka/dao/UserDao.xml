@@ -2,6 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kafka.dao.UserDao">
     <sql id="baseSelect">id, username, age, address</sql>
+    <resultMap id="userMap" type="com.kafka.pojo.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="age" column="age"/>
+        <result property="address" column="address"/>
+    </resultMap>
+    <resultMap id="userRoleMap" type="com.kafka.pojo.User" extends="userMap">
+        <collection property="roles" ofType="com.kafka.pojo.Role">
+            <id property="id" column="rid"/>
+            <result property="name" column="name"/>
+            <result property="description" column="description"/>
+        </collection>
+    </resultMap>
     <insert id="insertUser">
         insert into user
         values (null, #{username}, #{age}, #{address})
@@ -32,11 +45,12 @@
         <include refid="baseSelect"/>
         from user
     </select>
-    <select id="findById" resultType="com.kafka.pojo.User">
-        select
-        <include refid="baseSelect"/>
-        from user
-        where id = #{id}
+    <select id="findById" resultMap="userRoleMap">
+        select u.id, u.username, u.age, u.address, r.id rid, r.name, r.description
+        from user u,
+             role r
+        where u.id = #{id}
+          and u.id = r.id
     </select>
     <select id="findByUser" resultType="com.kafka.pojo.User">
         select

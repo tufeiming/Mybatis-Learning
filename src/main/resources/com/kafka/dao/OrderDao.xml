@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafka.dao.OrderDao">
+    <!--定义个父映射，供其他resultMap继承-->
+    <resultMap id="baseOrderMap" type="com.kafka.pojo.Order">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="price" property="price"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+    <!--继承baseOrderMap，然后只需要写自己特有的映射关系即可-->
+    <resultMap id="orderMap" type="com.kafka.pojo.Order" autoMapping="false" extends="baseOrderMap">
+        <result column="user_id" property="userId"/>
+    </resultMap>
+    <!--Order和User关联的映射-->
+    <resultMap id="orderUserMap" type="com.kafka.pojo.Order" autoMapping="false" extends="orderMap">
+        <result column="uid" property="user.id"/>
+        <result column="username" property="user.username"/>
+        <result column="age" property="user.age"/>
+        <result column="address" property="user.address"/>
+    </resultMap>
+    <!--Order和User关联的映射（使用association）-->
+    <resultMap id="orderUserMapUseAssociation" type="com.kafka.pojo.Order" autoMapping="false" extends="orderMap">
+        <association property="user" javaType="com.kafka.pojo.User">
+            <id column="uid" property="id"/>
+            <result column="username" property="username"/>
+            <result column="age" property="age"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
+    <select id="findAll" resultType="com.kafka.pojo.Order">
+        select id, create_time, price, remark, user_id
+        from `order`
+    </select>
+    <select id="findById" resultMap="orderUserMapUseAssociation">
+        select o.id,
+               o.create_time,
+               o.price,
+               o.remark,
+               o.user_id,
+               u.id uid,
+               u.username,
+               u.age,
+               u.address
+        from `order` o,
+             user u
+        where o.id = #{id}
+          and o.user_id = u.id
+    </select>
+</mapper>
